@@ -15,7 +15,7 @@ class GaussianMixtureEM():
         # initialize parameters
         mu = X[random.sample(list(range(n)), n_class)]
         pi = np.array([1 / n_class] * n_class)
-        cov = np.array([np.cov(X, rowvar=False)] * 4)
+        cov = np.array([np.cov(X, rowvar=False)] * n_class)
 
         for iter in range(self.max_iter):
             # E step calc rnk
@@ -37,10 +37,7 @@ class GaussianMixtureEM():
                 mu[k] = np.sum(rnk[:, k].reshape(n, 1) * X, axis=0) / nk[k]
 
             for k in range(n_class):
-                covk = 0
-                for i in range(n):
-                    covk += rnk[i, k] * np.dot((X - mu[k]).T, X - mu[k])
-                cov[k] = covk
+                cov[k] = (X - mu[k]).T.dot(np.diag(rnk[:, k])).dot(X - mu[k]) / nk[k]
 
             # calc loss function
             j = 0
