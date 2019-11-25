@@ -53,6 +53,9 @@ class GaussianMixtureEM():
                     break
             prev_j = j
 
+            if iter == self.max_iter:
+                break
+
         self.mu = mu
         self.cov = cov
         self.pi = pi
